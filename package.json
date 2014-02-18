@@ -1,0 +1,24 @@
+{
+  "name": "rebase",
+  "version": "0.1.0",
+  "description": "Rewrite linked references/urls/srcs in files.",
+  "main": "rebase.js",
+  "scripts": {
+    "test": "-"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tunderdomb/rebase.git"
+  },
+  "keywords": [
+    "node",
+    "rebase",
+    "gruntplugin"
+  ],
+  "author": "Nagy Zoltan <tunderdomb@gmail.com> (tunderdomb)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tunderdomb/rebase/issues"
+  },
+  "homepage": "https://github.com/tunderdomb/rebase"
+}
