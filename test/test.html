@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Rebase test</title>
+
+  <script type="text/javascript" src="test.js"></script>
+  <script type="text/javascript" src="/test/test.js"></script>
+  <link rel="stylesheet" href="css.css"/>
+  <link rel="stylesheet" href="/test/css.css"/>
+  <style type="text/css">
+    #test-1{
+      background: url("/test/img.jpg") no-repeat;
+    }
+    #test-2{
+      background: url("img.jpg") no-repeat;
+    }
+  </style>
+
+</head>
+<body>
+
+<img src="img.jpg" alt="test"/>
+<img src="/test/img.jpg" alt="test"/>
+
+<div id="test-1"></div>
+<div id="test-2"></div>
+
+<a href="/">home</a>
+<a href="hello.html">home</a>
+<a href="/test/hello.html">home</a>
+
+</body>
+</html>

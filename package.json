@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/tunderdomb/rebase/issues"
   },
-  "homepage": "https://github.com/tunderdomb/rebase"
+  "homepage": "https://github.com/tunderdomb/rebase",
+  "devDependencies": {
+    "grunt": "~0.4.2"
+  }
 }
