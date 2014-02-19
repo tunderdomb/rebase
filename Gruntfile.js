@@ -4,8 +4,13 @@ module.exports = function ( grunt ){
     rebase: {
       nodest: {
         options: {
-          script: [],
-          link: [],
+          script: {
+            "base": "rebase"
+          },
+          link: [{
+            base: "",
+            rebase: ""
+          }],
           a: [],
           img: [],
           url: [],

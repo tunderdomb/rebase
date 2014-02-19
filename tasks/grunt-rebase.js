@@ -23,7 +23,8 @@ module.exports = function ( grunt ){
       a: null,
       img: null,
       url: null,
-      imports: null
+      imports: null,
+      references: null
     })
 
     // Iterate over all specified file groups.
@@ -32,6 +33,8 @@ module.exports = function ( grunt ){
 
       filePair.src.forEach(function ( src ){
         if( !grunt.file.exists(src) ) return
+        var references = {}
+
         if ( dest ) {
           if ( grunt.util._.endsWith(dest, "/") ) {
 
@@ -41,7 +44,10 @@ module.exports = function ( grunt ){
           }
         }
         else dest = src
-        grunt.file.write(dest, rebase(grunt.file.read(src), options))
+
+        grunt.file.write(dest, rebase(grunt.file.read(src), options, references))
+
+        if( options.references ) options.references(references)
       })
     })
   })

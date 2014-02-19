@@ -18,24 +18,20 @@ function reference( src, refs ){
  * */
 var rebase = module.exports = function( content, options, references ){
   if( !options ) return content
-  if( options.script ) options.script.forEach(function( rule ){
-    content = rebase.script(content, rule.base, rule.rebase, references)
-  })
-  if( options.link ) options.link.forEach(function( rule ){
-    content = rebase.link(content, rule.base, rule.rebase, references)
-  })
-  if( options.a ) options.a.forEach(function( rule ){
-    content = rebase.a(content, rule.base, rule.rebase, references)
-  })
-  if( options.img ) options.img.forEach(function( rule ){
-    content = rebase.img(content, rule.base, rule.rebase, references)
-  })
-  if( options.url ) options.url.forEach(function( rule ){
-    content = rebase.url(content, rule.base, rule.rebase, references)
-  })
-  if( options.imports ) options.imports.forEach(function( rule ){
-    content = rebase.imports(content, rule.base, rule.rebase, references)
-  })
+  for( var scope in options ){
+    if( rebase[scope] ) {
+      if ( options[scope].forEach ) {
+        options[scope].forEach(function( rule ){
+          content = rebase[scope](content, rule.base, rule.rebase, references)
+        })
+      }
+      else {
+        for( var base in options[scope] ){
+          content = rebase[scope](content, base, options[scope][base], references)
+        }
+      }
+    }
+  }
   return content
 }
 
@@ -52,7 +48,7 @@ rebase.isReferenced = function( src, references ){
  * */
 rebase.tag = function( content, tag, attr, search, replace, references ){
   tag = new RegExp("<"+tag+"([^>]+)>", 'g') // capture attribute space
-  attr = new RegExp("("+attr+')="([^"]+)"') // capture attribute name and value
+  attr = new RegExp("("+attr+')\\s*=\\s*"\\s*([^"]+)\\s*"') // capture attribute name and value
   return content.replace(tag, function( match ){
     return match.replace(attr, function( match, attr, value ){
       references && reference(value, references)
@@ -93,10 +89,9 @@ rebase.img = function( content, base, rebase, references ){
  *
  * */
 rebase.url = function( content, base, rebase, references ){
-  base = new RegExp("^"+base)
-  return content.replace(/url\(([^\)]+)\)/, function( match, url ){
+  return content.replace(/url\(\s*['"]?\s*([^\)]+)\s*['"]?\s*\)/, function( match, url ){
     references && reference(url, references)
-    return "url("+url.replace(base, rebase)+")"
+    return "url(\""+url.replace(base, rebase)+"\")"
   })
 }
 
