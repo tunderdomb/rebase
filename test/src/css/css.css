@@ -1,0 +1,11 @@
+@charset "UTF-8";
+@import "import.css";
+
+body{
+  background: url("img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg")
+            , url('img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg')
+            , url(img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg)
+            , url("/img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg")
+            , url('/img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg')
+            , url(/img/mass_effect_3_earth_dreamscene_by_droot1986-d661hfj.jpg);
+}

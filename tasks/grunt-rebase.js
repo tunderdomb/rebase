@@ -7,7 +7,8 @@
 
 'use strict';
 
-var rebase = require("rebase")
+var rebase = require("../rebase")
+var path = require("path")
 
 module.exports = function ( grunt ){
 
@@ -18,37 +19,69 @@ module.exports = function ( grunt ){
 
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      script: null,
-      link: null,
-      a: null,
-      img: null,
-      url: null,
-      imports: null,
-      references: null
+      references: null,
+      filter: null
     })
+    var references = [] // referenced sources
+      , files = {}      // file content cache
+      , dests = {}      // src-dest maps
+      , count = 0
+      , skipped = 0
 
     // Iterate over all specified file groups.
     this.files.forEach(function ( filePair ){
-      var dest = filePair.dest
-
+      var base = filePair.base || options.base
+        , reference = filePair.reference || options.reference
+      // iterate sources and process them
       filePair.src.forEach(function ( src ){
-        if( !grunt.file.exists(src) ) return
-        var references = {}
-
-        if ( dest ) {
-          if ( grunt.util._.endsWith(dest, "/") ) {
-
+        if( !grunt.file.exists(src) || !grunt.file.isFile(src) ) return
+        var locals = []
+          , dest = filePair.dest || src
+        // skip files that doesn't need rebasing (like images)
+        if ( !filePair.scopes ) grunt.file.copy(src, dest)
+        // or cache the rebased contents
+        else {
+          files[src] = rebase(grunt.file.read(src), filePair.scopes, locals)
+          dests[src] = dest
+          ++count
+          // remap references
+          if ( base ) {
+            locals = locals.map(function( src ){
+              return path.join(base, src).replace(/[\/\\]+/g, "/")
+            })
           }
-          else {
-
+          if( typeof reference == "string" ) {
+            locals = locals.concat(grunt.file.expand(reference))
           }
+          else if( reference === true ) {
+            locals.push(src)
+          }
+          // add them to the global list
+          references = references.concat(locals)
         }
-        else dest = src
-
-        grunt.file.write(dest, rebase(grunt.file.read(src), options, references))
-
-        if( options.references ) options.references(references)
       })
     })
+
+    // filter dupes
+    references = references.filter(function( item, pos ){
+      return references.indexOf(item) == pos
+    })
+
+    var src
+    // filter cached contents and only write referenced ones
+    if ( options.filter ) for( src in files ){
+      if( !!~references.indexOf(src) )
+        grunt.file.write(dests[src], files[src])
+      else {
+        --count
+        // free memory immediately
+        files[src] = null
+      }
+    }
+    // or write every file
+    else for( src in files ){
+      grunt.file.write(src, files[src])
+    }
+    console.log("Rebased "+count+" files.", skipped ? "Skipped "+skipped+"." : "")
   })
 }

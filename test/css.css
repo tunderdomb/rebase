@@ -1,7 +1,0 @@
-@charset "UTF-8";
-
-body{
-  background: url("/test/test.jpg");
-  background: url('/test/test.jpg');
-  background: url(/test/test.jpg);
-}
