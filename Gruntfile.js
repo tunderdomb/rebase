@@ -27,16 +27,6 @@ module.exports = function ( grunt ){
       }
     },
     rebase: {
-      options: {
-        // task default
-        filter: function( dest, references ){
-          return true
-        },
-        // task default
-        references: function( src ){
-          return src
-        }
-      },
       noscope: {
         expand: true,
         cwd: "test/src/css/",
