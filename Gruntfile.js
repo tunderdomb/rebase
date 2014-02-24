@@ -1,31 +1,6 @@
 module.exports = function ( grunt ){
 
   grunt.initConfig({
-    copy: {
-      test: {
-        files: [{
-          expand: true,
-          cwd: "test/src/css/",
-          src: "*.*",
-          dest: "test/dest/static/style/"
-        }, {
-          expand: true,
-          cwd: "test/src/js/",
-          src: "*.*",
-          dest: "test/dest/static/script/"
-        }, {
-          expand: true,
-          cwd: "test/src/img/",
-          src: "*.*",
-          dest: "test/dest/static/images/"
-        }, {
-          expand: true,
-          cwd: "test/src/",
-          src: "*.html",
-          dest: "test/dest/"
-        }]
-      }
-    },
     rebase: {
       noscope: {
         expand: true,
@@ -34,6 +9,7 @@ module.exports = function ( grunt ){
         dest: "test/dest/static/style/"
       },
       scoped: {
+        // global options
         options: {
           // filter unreferenced files
           filter: true,
@@ -94,8 +70,6 @@ module.exports = function ( grunt ){
   })
 
   grunt.loadTasks('tasks')
-  grunt.loadNpmTasks('grunt-contrib-copy')
 
   grunt.registerTask("default", ["rebase"])
-//  grunt.registerTask("default", ["copy", "rebase"])
 }

@@ -1,6 +1,6 @@
 {
   "name": "rebase",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Rewrite linked references/urls/srcs in files.",
   "main": "rebase.js",
   "scripts": {
@@ -13,6 +13,9 @@
   "keywords": [
     "node",
     "rebase",
+    "rewrite path",
+    "rewrite src",
+    "rewrite url",
     "gruntplugin"
   ],
   "author": "Nagy Zoltan <tunderdomb@gmail.com> (tunderdomb)",
@@ -27,9 +30,5 @@
   },
   "directories": {
     "test": "test"
-  },
-  "dependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-copy": "~0.5.0"
   }
 }
