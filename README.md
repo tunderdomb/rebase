@@ -103,7 +103,7 @@ File will be written to dist/static/img/image.jpg
 
 ## Grunt task
 
-    grunt.loadNpmTasks('rebase');
+    grunt.loadNpmTasks('grunt-rebase');
 
 ## Usage
 
