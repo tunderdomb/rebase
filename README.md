@@ -66,6 +66,37 @@ In the grunt task, define a `scope` object on the file object.
 The keys will be converted to a RegExp pattern, and matched against the source files
 the task runs on. The values of the `scope`'s properties will be replace value of `"".replace(pattern, replacement)`.
 
+## Options
+
+### filter
+
+Type: `Boolean`
+
+Default: `false`
+
+Filter unreferenced files.
+
+### base
+
+Type: `String`
+
+Default: `""`
+
+Prepend this path part to the matched resources. Useful if resource root is not the project root.
+
+E.g.:
+
+Matched: "/images/image.jpg" for an image `src`
+
+Path in project: src/images/image.jpg
+
+Base: "src/"
+
+Rebase to: dist/static/img/
+
+File will be written to dist/static/img/image.jpg
+
+
 ## Install
 
     npm install rebase --save-dev

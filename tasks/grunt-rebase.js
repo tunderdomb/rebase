@@ -19,8 +19,8 @@ module.exports = function ( grunt ){
 
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      references: null,
-      filter: null
+      references: "",
+      filter: false
     })
     var references = [] // referenced sources
       , files = {}      // file content cache
