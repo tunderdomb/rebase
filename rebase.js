@@ -37,6 +37,20 @@ var rebase = module.exports = function( content, options, references ){
 }
 
 /**
+ * String
+ * */
+rebase.string = function( content, search, replace, references ){
+  search = new RegExp("^"+search)
+  return content.replace(/('|")([^\1]+?)\1/g, function( match, str, inside ){
+    if ( search.test(inside) ) {
+      references && reference(inside, references)
+      inside = inside.replace(search, replace)
+    }
+    return str + inside + str
+  })
+}
+
+/**
  *
  * */
 var tag = rebase.tag = function( content, tag, attr, search, replace, references ){

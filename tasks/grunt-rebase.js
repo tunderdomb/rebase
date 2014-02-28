@@ -68,10 +68,13 @@ module.exports = function ( grunt ){
     })
 
     var src
+      , rebased = []
     // filter cached contents and only write referenced ones
     if ( options.filter ) for( src in files ){
-      if( !!~references.indexOf(src) )
+      if( !!~references.indexOf(src) ){
         grunt.file.write(dests[src], files[src])
+        rebased.push(src)
+      }
       else {
         --count
         // free memory immediately
@@ -80,8 +83,12 @@ module.exports = function ( grunt ){
     }
     // or write every file
     else for( src in files ){
-      grunt.file.write(src, files[src])
+      grunt.file.write(dests[src], files[src])
+      rebased.push(src)
     }
     console.log("Rebased "+count+" files.", skipped ? "Skipped "+skipped+"." : "")
+    rebased.forEach(function( src ){
+      console.log(src)
+    })
   })
 }
