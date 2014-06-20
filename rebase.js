@@ -48,7 +48,7 @@ var rebase = module.exports = function( content, options, references ){
  * */
 rebase.string = function( content, search, replace, references ){
   search = new RegExp("^"+search)
-  return content.replace(/('|")([^\1]*?)\1/g, function( match, str, inside ){
+  return content.replace(/('|")((?:\\\1|.)*?)\1/g, function( match, str, inside ){
     if ( search.test(inside) ) {
       references && reference(inside, references)
       inside = inside.replace(search, replace)
