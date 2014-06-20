@@ -20,15 +20,22 @@ function reference( src, refs ){
 var rebase = module.exports = function( content, options, references ){
   if( !options ) return content
   for( var scope in options ){
-    if( rebase[scope] && options[scope] ) {
-      if ( options[scope].forEach ) {
-        options[scope].forEach(function( rule ){
-          content = rebase[scope](content, rule.base, rule.rebase, references)
+    var rewriter = rebase[scope]
+    scope = options[scope]
+    if( rewriter && scope ) {
+      if ( scope.forEach ) {
+        scope.forEach(function( rule ){
+          if ( rule.tag ) {
+            content = rebase.tag(content, rule.tag, rule.attr, rule.base, rule.rebase, references)
+          }
+          else {
+            content = rewriter(content, rule.base, rule.rebase, references)
+          }
         })
       }
       else {
-        for( var base in options[scope] ){
-          content = rebase[scope](content, base, options[scope][base], references)
+        for( var base in scope ){
+          content = rewriter(content, base, scope[base], references)
         }
       }
     }

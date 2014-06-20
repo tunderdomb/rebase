@@ -1,6 +1,6 @@
 {
   "name": "grunt-rebase",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Rewrite linked references/urls/srcs in files.",
   "main": "rebase.js",
   "scripts": {

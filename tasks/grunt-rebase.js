@@ -25,8 +25,8 @@ module.exports = function ( grunt ){
     var references = [] // referenced sources
       , files = {}      // file content cache
       , dests = {}      // src-dest maps
-      , count = 0
-      , skipped = 0
+      , rebaseCount = 0
+      , copyCount = 0
 
     // Iterate over all specified file groups.
     this.files.forEach(function ( filePair ){
@@ -38,12 +38,15 @@ module.exports = function ( grunt ){
         var locals = []
           , dest = filePair.dest || src
         // skip files that doesn't need rebasing (like images)
-        if ( !filePair.scopes ) grunt.file.copy(src, dest)
+        if ( !filePair.scopes ) {
+          grunt.file.copy(src, dest)
+          ++copyCount
+        }
         // or cache the rebased contents
         else {
           files[src] = rebase(grunt.file.read(src), filePair.scopes, locals)
           dests[src] = dest
-          ++count
+          ++rebaseCount
           // remap references
           if ( base ) {
             locals = locals.map(function( src ){
@@ -76,7 +79,7 @@ module.exports = function ( grunt ){
         rebased.push(src)
       }
       else {
-        --count
+        --rebaseCount
         // free memory immediately
         files[src] = null
       }
@@ -86,9 +89,6 @@ module.exports = function ( grunt ){
       grunt.file.write(dests[src], files[src])
       rebased.push(src)
     }
-    console.log("Rebased "+count+" files.", skipped ? "Skipped "+skipped+"." : "")
-    rebased.forEach(function( src ){
-      console.log(src)
-    })
+    console.log("Rebased: %d, copied: %d, Total: %s", rebaseCount, copyCount, rebaseCount+copyCount)
   })
 }
