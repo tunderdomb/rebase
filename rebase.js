@@ -3,21 +3,12 @@
  * */
 
 /**
- *
- * */
-function reference( src, refs ){
-  src = src.replace(/[\/\\]+/g, "/")
-//  src = src.replace(new RegExp("^/".replace(/(\/+|\\+)$/, "")), "/").replace(/[\/\\]+/g, "/")
-  if( !~refs.indexOf(src) ) refs.push(src)
-}
-
-/**
  * rebase
  * @param content{String}
  * @param options{Object}
  * @param references{String} [optional]
  * */
-var rebase = module.exports = function( content, options, references ){
+var rebase = module.exports = function( content, options ){
   if( !options ) return content
   for( var scope in options ){
     var rewriter = rebase[scope]
@@ -26,16 +17,16 @@ var rebase = module.exports = function( content, options, references ){
       if ( scope.forEach ) {
         scope.forEach(function( rule ){
           if ( rule.tag ) {
-            content = rebase.tag(content, rule.tag, rule.attr, rule.base, rule.rebase, references)
+            content = rebase.tag(content, rule.tag, rule.attr, rule.base, rule.rebase)
           }
           else {
-            content = rewriter(content, rule.base, rule.rebase, references)
+            content = rewriter(content, rule.base, rule.rebase)
           }
         })
       }
       else {
         for( var base in scope ){
-          content = rewriter(content, base, scope[base], references)
+          content = rewriter(content, base, scope[base])
         }
       }
     }
@@ -44,13 +35,12 @@ var rebase = module.exports = function( content, options, references ){
 }
 
 /**
- * String
+ * "any string"
  * */
-rebase.string = function( content, search, replace, references ){
+rebase.string = function( content, search, replace ){
   search = new RegExp("^"+search)
   return content.replace(/('|")((?:\\\1|.)*?)\1/g, function( match, str, inside ){
     if ( search.test(inside) ) {
-      references && reference(inside, references)
       inside = inside.replace(search, replace)
     }
     return str + inside + str
@@ -58,16 +48,15 @@ rebase.string = function( content, search, replace, references ){
 }
 
 /**
- *
+ * <tag attr="">
  * */
-var tag = rebase.tag = function( content, tag, attr, search, replace, references ){
+var tag = rebase.tag = function( content, tag, attr, search, replace ){
   tag = new RegExp("<"+tag+"([^>]+)>", 'g') // capture attribute space
   attr = new RegExp("("+attr+')\\s*=\\s*"\\s*([^"]+)\\s*"') // capture attribute name and value
   search = new RegExp("^"+search)
   return content.replace(tag, function( match ){
     return match.replace(attr, function( match, attr, value ){
       if ( search.test(value) ) {
-        references && reference(value, references)
         return attr+'="'+value.replace(search, replace)+'"'
       }
       else return match
@@ -76,41 +65,40 @@ var tag = rebase.tag = function( content, tag, attr, search, replace, references
 }
 
 /**
- *
+ * <script type="text/javascript" src=""></script>
  * */
-rebase.script = function( content, search, replace, references ){
-  return tag(content, "script", "src", search, replace, references)
+rebase.script = function( content, search, replace ){
+  return tag(content, "script", "src", search, replace)
 }
 
 /**
- *
+ * <link rel="stylesheet" href=""/>
  * */
-rebase.link = function( content, search, replace, references ){
-  return tag(content, "link", "href", search, replace, references)
+rebase.link = function( content, search, replace ){
+  return tag(content, "link", "href", search, replace)
 }
 
 /**
- *
+ * <a href=""></a>
  * */
-rebase.a = function( content, search, replace, references ){
-  return tag(content, "a", "href", search, replace, references)
+rebase.a = function( content, search, replace ){
+  return tag(content, "a", "href", search, replace)
 }
 
 /**
- *
+ * <img src="" alt=""/>
  * */
-rebase.img = function( content, search, replace, references ){
-  return tag(content, "img", "src", search, replace, references)
+rebase.img = function( content, search, replace ){
+  return tag(content, "img", "src", search, replace)
 }
 
 /**
- *
+ * background-image: url("");
  * */
-rebase.url = function( content, search, replace, references ){
+rebase.url = function( content, search, replace ){
   search = new RegExp("^"+search)
   return content.replace(/url\(\s*['"]?([^\)]+?)['"]?\s*\)/g, function( match, url ){
     if ( search.test(url) ) {
-      references && reference(url, references)
       return "url(\""+url.replace(search, replace)+"\")"
     }
     else return match
@@ -118,13 +106,12 @@ rebase.url = function( content, search, replace, references ){
 }
 
 /**
- *
+ * @import "";
  * */
-rebase.imports = function( content, search, replace, references ){
+rebase.imports = function( content, search, replace ){
   search = new RegExp("^"+search)
   return content.replace(/@import\s+"([^")]+)"/g, function( match, url ){
     if ( search.test(url) ) {
-      references && reference(url, references)
       return "@import \""+url.replace(search, replace)+"\""
     }
     else return match

@@ -21,8 +21,6 @@ module.exports = function ( grunt ){
           cwd: "test/src/css/",
           src: "*.css",
           dest: "test/dest/static/style/",
-          // match glob pattern and add them to references
-          reference: "test/src/css/*.css",
           scopes: {
             url: {
               "/?img": "/static/images",
@@ -34,8 +32,6 @@ module.exports = function ( grunt ){
           cwd: "test/src/",
           src: "*.html",
           dest: "test/dest/",
-          // add processed files to references
-          reference: true,
           scopes: {
             url: {
               "/?img": "/static/images",

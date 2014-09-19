@@ -1,6 +1,6 @@
 {
-  "name": "grunt-rebase",
-  "version": "0.2.2",
+  "name": "rebase",
+  "version": "1.0.0",
   "description": "Rewrite linked references/urls/srcs in files.",
   "main": "rebase.js",
   "scripts": {
@@ -25,10 +25,15 @@
   },
   "homepage": "https://github.com/tunderdomb/rebase",
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt": "~0.4.5",
+    "grunt-contrib-copy": "~0.5.0",
+    "gulp": "~3.8.8"
   },
   "directories": {
     "test": "test"
+  },
+  "dependencies": {
+    "through2": "~0.6.1",
+    "gulp-util": "~3.0.1"
   }
 }

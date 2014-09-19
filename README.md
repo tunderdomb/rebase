@@ -1,22 +1,14 @@
 Rebase
 =======
 
-## The problem
+## What is this?
 
-You want to build a project, and have the directory structure change a bit.
-For whatever reason. You could just simply copy everything,
-but you would have to rename absolute references to file paths.
-Like script includes, stylsheets, image sources.
-
-This grunt task handles all that, plus you can set it to copy only referenced files.
-
-The intended usage is Grunt's [file array format](http://gruntjs.com/configuring-tasks#files-array-format).
-With this, you can copy multiple types of files into different dirs, and the task will be able to look for reference
-in all of them.
+Rebase helps you refactor urls in files.
+Let it be a script src attribute or a url() in a css rule.
+Tell it what scope you want the replace to happen.
+It is essentially `String.replace()` smarty-pants.
 
 ## Scopes
-
-Rebase is based on scopes. Each one parallels with a form of resource include.
 
 ### script
 
@@ -60,52 +52,60 @@ Rebase is based on scopes. Each one parallels with a form of resource include.
 }
 ```
 
-## Url matching
-
-In the grunt task, define a `scope` object on the file object.
-The keys will be converted to a RegExp pattern, and matched against the source files
-the task runs on. The values of the `scope`'s properties will be replace value of `"".replace(pattern, replacement)`.
-
-## Options
-
-### filter
-
-Type: `Boolean`
-
-Default: `false`
-
-Filter unreferenced files.
-
-### base
-
-Type: `String`
-
-Default: `""`
-
-Prepend this path part to the matched resources. Useful if resource root is not the project root.
-
-E.g.:
-
-Matched: "/images/image.jpg" for an image `src`
-
-Path in project: src/images/image.jpg
-
-Base: "src/"
-
-Rebase to: dist/static/img/
-
-File will be written to dist/static/img/image.jpg
-
-
 ## Install
 
     npm install rebase --save-dev
+
+## Usage
+
+```js
+var rebase = require("../rebase")
+var contents = ""
+var scopes = {}
+var rebasedContents = rebase(contents, scopes)
+```
+
+## Gulp task
+
+```js
+var gulp = require("gulp")
+var rebase = require("./tasks/gulp-rebase")
+
+gulp.task("rebase-html", function(  ){
+  gulp.src("test/src/*.html")
+    .pipe(rebase({
+      url: {
+        "/?img": "/static/images",
+        "/?font": "/static/fonts"
+      },
+      a: {
+        "/?img": "/static/images"
+      },
+      img: {
+        "/?img": "/static/images"
+      },
+      link: {
+        "/?css": "/static/style"
+      },
+      script: {
+        "/?js": "/static/script"
+      }
+    }))
+    .pipe(gulp.dest("test/dest/"))
+})
+
+gulp.task("default", ["rebase-html"])
+```
 
 ## Grunt task
 
     grunt.loadNpmTasks('grunt-rebase');
 
 ## Usage
+
+In the grunt task, define a `scope` object on the file object.
+The keys will be converted to a RegExp pattern, and matched against the source files
+the task runs on. The values of the `scope`'s properties will be replace value of `"".replace(pattern, replacement)`.
 
 
 ```js
