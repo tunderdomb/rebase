@@ -97,9 +97,9 @@ rebase.img = function( content, search, replace ){
  * */
 rebase.url = function( content, search, replace ){
   search = new RegExp("^"+search)
-  return content.replace(/url\(\s*['"]?([^\)]+?)['"]?\s*\)/g, function( match, url ){
+  return content.replace(/url\(\s*['"]?([^'"]+?)['"]?\s*\)/g, function( match, url ){
     if ( search.test(url) ) {
-      return "url(\""+url.replace(search, replace)+"\")"
+      return "url("+url.replace(search, replace)+")"
     }
     else return match
   })
